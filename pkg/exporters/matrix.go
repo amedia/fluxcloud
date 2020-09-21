@@ -23,6 +23,7 @@ type MatrixMessage struct {
 
 // The Matrix exporter sends Flux events to a Matrix channel.
 type Matrix struct {
+	ExcludingExporter
 	url         string
 	fullUrl     string
 	roomId      string

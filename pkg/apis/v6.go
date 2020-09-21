@@ -9,10 +9,10 @@ import (
 	"github.com/topfreegames/fluxcloud/pkg/utils"
 )
 
-// Handle Flux events
+//HandleV6 Handle Flux events
 func HandleV6(config APIConfig) (err error) {
 	config.Server.HandleFunc("/v6/events", func(w http.ResponseWriter, r *http.Request) {
-		log.Print("Request for:", r.URL)
+		log.Print("API Request for:", r.URL)
 
 		eventStr, err := ioutil.ReadAll(r.Body)
 		log.Print(string(eventStr))

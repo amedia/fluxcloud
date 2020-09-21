@@ -15,6 +15,7 @@ import (
 
 // The Webhook exporter sends Flux events to a Webhook channel via a webhook.
 type Webhook struct {
+	ExcludingExporter
 	Url string
 }
 

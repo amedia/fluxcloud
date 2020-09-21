@@ -14,6 +14,7 @@ import (
 
 // The MSTeams exporter sends Flux events to a Microsoft Teams channel via a webhook.
 type MSTeams struct {
+	ExcludingExporter
 	Url string
 }
 

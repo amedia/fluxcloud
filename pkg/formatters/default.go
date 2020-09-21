@@ -129,6 +129,11 @@ func NewDefaultFormatter(config config.Config) (*DefaultFormatter, error) {
 
 // Format plaintext message for an exporter for Flux event
 func (d DefaultFormatter) FormatEvent(event fluxevent.Event, exporter exporters.Exporter) msg.Message {
+	if exporter.Excluded(event.Type) {
+		//return empty message, this will cause the main function to skip exporter.Send()
+		return msg.Message{}
+	}
+
 	values := &tplValues{
 		VCSLink:            d.vcsLink,
 		EventID:            event.ID,

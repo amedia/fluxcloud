@@ -9,6 +9,7 @@ import (
 )
 
 type FakeExporter struct {
+	ExcludingExporter
 	Sent []msg.Message
 }
 

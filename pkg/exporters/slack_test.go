@@ -32,7 +32,7 @@ func TestSlackDefault(t *testing.T) {
 	slack, err := NewSlack(config)
 	assert.Nil(t, err)
 
-	assert.Equal(t, "https://myslack/", slack.Url)
+	assert.Equal(t, "https://myslack/", slack.URL)
 	assert.Equal(t, []SlackChannel{SlackChannel{"#mychannel", "*"}}, slack.Channels)
 	assert.Equal(t, "Flux Deployer", slack.Username)
 	assert.Equal(t, ":star-struck:", slack.IconEmoji)
@@ -49,7 +49,7 @@ func TestSlackOverrides(t *testing.T) {
 	slack, err := NewSlack(config)
 	assert.Nil(t, err)
 
-	assert.Equal(t, "https://myslack/", slack.Url)
+	assert.Equal(t, "https://myslack/", slack.URL)
 	assert.Equal(t, []SlackChannel{SlackChannel{"#mychannel", "namespace"}}, slack.Channels)
 	assert.Equal(t, "my user", slack.Username)
 	assert.Equal(t, ":weave:", slack.IconEmoji)
@@ -169,7 +169,7 @@ func TestSlackSend(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	testSlack.Url = ts.URL
+	testSlack.URL = ts.URL
 
 	err := testSlack.Send(context.TODO(), &http.Client{}, message)
 	assert.Nil(t, err)
@@ -190,7 +190,7 @@ func TestSlackSendNon200(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	testSlack.Url = ts.URL
+	testSlack.URL = ts.URL
 
 	err := testSlack.Send(context.TODO(), &http.Client{}, message)
 	assert.NotNil(t, err)
@@ -212,7 +212,7 @@ func TestSlackSendHTTPError(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	testSlack.Url = ts.URL
+	testSlack.URL = ts.URL
 
 	err := testSlack.Send(context.TODO(), &http.Client{}, message)
 	assert.NotNil(t, err)
@@ -249,7 +249,7 @@ func TestSlackSendAuthToken(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	testSlack.Url = ts.URL
+	testSlack.URL = ts.URL
 	testSlack.Token = "mytoken"
 
 	err := testSlack.Send(context.TODO(), &http.Client{}, message)

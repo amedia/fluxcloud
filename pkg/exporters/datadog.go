@@ -17,6 +17,7 @@ import (
 // Datadog wraps the Datadog Client
 type Datadog struct {
 	datadogClient *datadog.Client
+	ExcludingExporter
 }
 
 // DatadogEvent represents a Datadog Event

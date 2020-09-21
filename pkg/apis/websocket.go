@@ -1,20 +1,21 @@
 package apis
 
 import (
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/websocket"
 )
 
 var upgrader = websocket.Upgrader{}
 
-// Handle Flux WebSocket connections
+//HandleWebsocket Handle Flux WebSocket connections
 func HandleWebsocket(config APIConfig) error {
 	config.Server.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Print("Request for:", r.URL)
+		log.Print("WS Request for:", r.URL)
 		c, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			log.Print("upgrade:", err)
+			log.Print("ws upgrade:", err)
 			return
 		}
 		defer func() {
@@ -31,7 +32,7 @@ func HandleWebsocket(config APIConfig) error {
 				break
 			}
 
-			log.Printf("recv: %s", message)
+			log.Printf("ws recv: %s", message)
 			err = c.WriteMessage(mt, message)
 
 			if err != nil {

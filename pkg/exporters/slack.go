@@ -14,16 +14,17 @@ import (
 	"github.com/topfreegames/fluxcloud/pkg/msg"
 )
 
-// The Slack exporter sends Flux events to a Slack channel via a webhook.
+//Slack The Slack exporter sends Flux events to a Slack channel via a webhook.
 type Slack struct {
-	Url       string
+	ExcludingExporter
+	URL       string
 	Username  string
 	Token     string
 	Channels  []SlackChannel
 	IconEmoji string
 }
 
-// Represents a slack message sent to the API
+//SlackMessage Represents a slack message sent to the API
 type SlackMessage struct {
 	Channel     string            `json:"channel"`
 	IconEmoji   string            `json:"icon_emoji"`
@@ -31,7 +32,7 @@ type SlackMessage struct {
 	Attachments []SlackAttachment `json:"attachments"`
 }
 
-// Represents a section of a slack message that is sent to the API
+//SlackAttachment Represents a section of a slack message that is sent to the API
 type SlackAttachment struct {
 	Color     string `json:"color"`
 	Title     string `json:"title"`
@@ -39,18 +40,18 @@ type SlackAttachment struct {
 	Text      string `json:"text"`
 }
 
-// Represents a slack channel and the Kubernetes namespace linked to it
+//SlackChannel Represents a slack channel and the Kubernetes namespace linked to it
 type SlackChannel struct {
 	Channel   string `json:"channel"`
 	Namespace string `json:"namespace"`
 }
 
-// Initialize a new Slack instance
+//NewSlack Initialize a new Slack instance
 func NewSlack(config config.Config) (*Slack, error) {
 	var err error
 	s := Slack{}
 
-	s.Url, err = config.Required("slack_url")
+	s.URL, err = config.Required("slack_url")
 	if err != nil {
 		return nil, err
 	}
@@ -66,6 +67,7 @@ func NewSlack(config config.Config) (*Slack, error) {
 	s.Username = config.Optional("slack_username", "Flux Deployer")
 	s.IconEmoji = config.Optional("slack_icon_emoji", ":star-struck:")
 
+	s.ExcludedTypes = strings.Split(config.Optional("slack_excluded_event_types", ""), ",")
 	return &s, nil
 }
 
@@ -82,7 +84,7 @@ func (s *Slack) Send(c context.Context, client *http.Client, message msg.Message
 
 		log.Print(string(b.Bytes()))
 
-		req, _ := http.NewRequest("POST", s.Url, b)
+		req, _ := http.NewRequest("POST", s.URL, b)
 		req.Header.Set("Content-Type", "application/json")
 
 		if s.Token != "" {
@@ -106,17 +108,17 @@ func (s *Slack) Send(c context.Context, client *http.Client, message msg.Message
 	return nil
 }
 
-// Return the new line character for Slack messages
+//NewLine Return the new line character for Slack messages
 func (s *Slack) NewLine() string {
 	return "\n"
 }
 
-// Return a formatted link for Slack.
+//FormatLink Return a formatted link for Slack.
 func (s *Slack) FormatLink(link string, name string) string {
 	return fmt.Sprintf("<%s|%s>", link, name)
 }
 
-// Convert a flux event into a Slack message(s)
+//NewSlackMessage Convert a flux event into a Slack message(s)
 func (s *Slack) NewSlackMessage(message msg.Message) []SlackMessage {
 	var messages []SlackMessage
 	for _, channel := range s.determineChannels(message) {
@@ -139,7 +141,7 @@ func (s *Slack) NewSlackMessage(message msg.Message) []SlackMessage {
 	return messages
 }
 
-// Return the name of the exporter.
+//Name Return the name of the exporter.
 func (s *Slack) Name() string {
 	return "Slack"
 }
