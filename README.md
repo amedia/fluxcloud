@@ -1,3 +1,7 @@
+# Why this fork
+
+the slack exporter does report events for everything change in flux that is picked up from the underlying git repository. This fork attempts to make it so that only changes in monitored sub directories are reported on.
+
 Fluxcloud is a tool to receive events from the [Weave flux](https://github.com/fluxcd/flux).
 
 [![Actions Status](https://github.com/topfreegames/fluxcloud/workflows/Test/badge.svg)](https://github.com/topfreegames/fluxcloud/actions)
